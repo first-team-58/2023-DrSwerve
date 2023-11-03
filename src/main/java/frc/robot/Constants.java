@@ -11,7 +11,6 @@ import frc.lib.util.CommandXboxExtended;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
-  public static final double slowModif = 1;
 
   public static final class Controllers {
     public static final CommandXboxExtended driverController = new CommandXboxExtended(0);
@@ -92,6 +91,9 @@ public final class Constants {
     /** Radians per Second */
     public static final double maxAngularVelocity =
         10.0; // TODO: This must be tuned to specific robot
+    
+    public static final double slowSpeed = 1; // Meters per second
+
 
     /* Neutral Modes */
     public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
