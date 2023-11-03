@@ -5,8 +5,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.Controllers;
+import frc.robot.commands.TeleopGripper;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Reacher;
+import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Swerve;
 
 /**
@@ -23,6 +28,9 @@ public class RobotContainer {
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
+  private final Shoulder m_shoulder = new Shoulder();
+  private final Reacher m_reacher = new Reacher();
+  private final Gripper m_gripper = new Gripper();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -44,6 +52,31 @@ public class RobotContainer {
     Controllers.driverController
         .rightBumper()
         .onTrue(new InstantCommand(() -> s_Swerve.toggleSlow()));
+
+    /* Operator Controls */
+    /* Move Shoulder front to back with Y button */
+    Controllers.kOperatorController
+        .y()
+        .onTrue(new RunCommand(m_shoulder::moveShoulderFrontToBack, m_shoulder))
+        .onFalse(new InstantCommand(m_shoulder::stop, m_shoulder));
+
+    /* Move Shoulder back to front with X button */
+    Controllers.kOperatorController
+        .x()
+        .onTrue(new RunCommand(m_shoulder::moveShoulderBackToFront, m_shoulder))
+        .onFalse(new InstantCommand(m_shoulder::stop, m_shoulder));
+
+    /* Extend Reacher out with B button */
+    Controllers.kOperatorController
+        .b()
+        .onTrue(new RunCommand(m_reacher::reacherOut, m_reacher))
+        .onFalse(new InstantCommand(m_reacher::stop, m_reacher));
+
+    /* Retract Reacher in with A button */
+    Controllers.kOperatorController
+        .a()
+        .onTrue(new RunCommand(m_reacher::reacherIn, m_reacher))
+        .onFalse(new InstantCommand(m_reacher::stop, m_reacher));
   }
 
   private void configureSubsystemCommands() {
@@ -54,6 +87,12 @@ public class RobotContainer {
             () -> -Controllers.driverController.getRawAxis(strafeAxis),
             () -> -Controllers.driverController.getRawAxis(rotationAxis),
             () -> Controllers.driverController.leftBumper().getAsBoolean()));
+
+    m_gripper.setDefaultCommand(
+        new TeleopGripper(
+            m_gripper,
+            () -> Controllers.kOperatorController.getRightTriggerAxis(),
+            () -> Controllers.kOperatorController.getLeftTriggerAxis()));
   }
 
   /**
