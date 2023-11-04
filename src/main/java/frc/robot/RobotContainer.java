@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.Controllers;
 import frc.robot.commands.TeleopGripper;
@@ -32,6 +31,8 @@ public class RobotContainer {
   private final Reacher m_reacher = new Reacher();
   private final Gripper m_gripper = new Gripper();
 
+  private final AutoBuilder m_autoBuilder = new AutoBuilder(m_shoulder, m_gripper, m_reacher);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -55,25 +56,25 @@ public class RobotContainer {
 
     /* Operator Controls */
     /* Move Shoulder front to back with Y button */
-    Controllers.kOperatorController
+    Controllers.operatorController
         .y()
         .onTrue(new RunCommand(m_shoulder::moveShoulderFrontToBack, m_shoulder))
         .onFalse(new InstantCommand(m_shoulder::stop, m_shoulder));
 
     /* Move Shoulder back to front with X button */
-    Controllers.kOperatorController
+    Controllers.operatorController
         .x()
         .onTrue(new RunCommand(m_shoulder::moveShoulderBackToFront, m_shoulder))
         .onFalse(new InstantCommand(m_shoulder::stop, m_shoulder));
 
     /* Extend Reacher out with B button */
-    Controllers.kOperatorController
+    Controllers.operatorController
         .b()
         .onTrue(new RunCommand(m_reacher::reacherOut, m_reacher))
         .onFalse(new InstantCommand(m_reacher::stop, m_reacher));
 
     /* Retract Reacher in with A button */
-    Controllers.kOperatorController
+    Controllers.operatorController
         .a()
         .onTrue(new RunCommand(m_reacher::reacherIn, m_reacher))
         .onFalse(new InstantCommand(m_reacher::stop, m_reacher));
@@ -91,8 +92,8 @@ public class RobotContainer {
     m_gripper.setDefaultCommand(
         new TeleopGripper(
             m_gripper,
-            () -> Controllers.kOperatorController.getRightTriggerAxis(),
-            () -> Controllers.kOperatorController.getLeftTriggerAxis()));
+            () -> Controllers.operatorController.getRightTriggerAxis(),
+            () -> Controllers.operatorController.getLeftTriggerAxis()));
   }
 
   /**
@@ -102,6 +103,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new PrintCommand("NOAUTO");
+    return m_autoBuilder.getCurrentAutoCommand();
   }
 }
