@@ -1,5 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -11,25 +15,31 @@ import frc.robot.commands.ShoulderToAngle;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.Reacher;
 import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Swerve;
+import java.util.Map;
 
 public class AutoBuilder {
+  private final Swerve m_swerve;
   private final Shoulder m_shoulder;
   private final Gripper m_gripper;
   private final Reacher m_reacher;
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  public AutoBuilder(Shoulder shoulder, Gripper gripper, Reacher reacher) {
+  public AutoBuilder(
+      frc.robot.subsystems.Swerve s_Swerve, Shoulder shoulder, Gripper gripper, Reacher reacher) {
+    this.m_swerve = s_Swerve;
     this.m_shoulder = shoulder;
     this.m_gripper = gripper;
     this.m_reacher = reacher;
 
     buildAutonomousChooser();
+    configureShuffeboard();
   }
 
   private void buildAutonomousChooser() {
     m_chooser.setDefaultOption("DO NOTHING", new PrintCommand("NOTHING"));
-    m_chooser.addOption("Score Cube", cubeShootAndScoreHigh());
+    m_chooser.addOption("Score Cube", cubeShootAndScoreHigh().andThen(bringArmHome()));
   }
 
   /* private Command weekZeroChargeClimb() {
@@ -55,6 +65,23 @@ public class AutoBuilder {
         .until(m_reacher::getReacherLimitSwitch)
         .withTimeout(2.1)
         .andThen(new InstantCommand(m_reacher::stop, m_reacher));
+  }
+
+  public Command tryToDrive() {
+    /* Get Values, Deadband*/
+    double translationVal = .5;
+    double strafeVal = 0;
+    double rotationVal = 0;
+
+    return new RunCommand(
+            () ->
+                m_swerve.drive(
+                    new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
+                    rotationVal * Constants.Swerve.maxAngularVelocity,
+                    false,
+                    false),
+            m_swerve)
+        .withTimeout(3);
   }
 
   public Command cubeShootAndScoreHigh() {
@@ -93,6 +120,42 @@ public class AutoBuilder {
 
   private Command resetAngleToZero() {
     return new InstantCommand(m_shoulder::resetAngleToZero, m_shoulder);
+  }
+
+  private void configureShuffeboard() {
+    configureAutoBuilder();
+  }
+
+  private void configureAutoBuilder() {
+    ShuffleboardTab tab = Shuffleboard.getTab("Auto Builder");
+
+    /* add the auto chooser */
+    tab.add("Auto Chooser", m_chooser).withPosition(6, 0).withSize(3, 1);
+
+    configureShoulder();
+  }
+
+  private void configureShoulder() {
+
+    /* Shoulder */
+    ShuffleboardTab tab = Shuffleboard.getTab("Shoulder");
+    tab.addBoolean("Front Switch", m_shoulder::getFrontLimitSwitch)
+        .withPosition(0, 0)
+        .withSize(1, 1);
+    tab.addBoolean("Back Switch", m_shoulder::getBackLimitSwitch).withPosition(1, 0).withSize(1, 1);
+    tab.addDouble("Shoulder Encoder", m_shoulder::getEncoderCount)
+        .withPosition(0, 1)
+        .withSize(1, 1);
+    tab.addDouble("Shoulder Dial", m_shoulder::getArmAngle)
+        .withWidget(BuiltInWidgets.kDial)
+        .withProperties(Map.of("min", -270, "max", 270))
+        .withPosition(0, 2)
+        .withSize(1, 1);
+    tab.addDouble("Shoulder Angle", m_shoulder::getArmAngle).withPosition(1, 2).withSize(1, 1);
+    tab.addDouble("Shoulder Speed", m_shoulder::getShoulderSpeed)
+        .withPosition(2, 2)
+        .withSize(1, 1)
+        .withWidget(BuiltInWidgets.kNumberSlider);
   }
 
   public Command getCurrentAutoCommand() {

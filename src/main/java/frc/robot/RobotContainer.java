@@ -31,7 +31,8 @@ public class RobotContainer {
   private final Reacher m_reacher = new Reacher();
   private final Gripper m_gripper = new Gripper();
 
-  private final AutoBuilder m_autoBuilder = new AutoBuilder(m_shoulder, m_gripper, m_reacher);
+  private final AutoBuilder m_autoBuilder =
+      new AutoBuilder(s_Swerve, m_shoulder, m_gripper, m_reacher);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -86,7 +87,7 @@ public class RobotContainer {
             s_Swerve,
             () -> -Controllers.driverController.getRawAxis(translationAxis),
             () -> -Controllers.driverController.getRawAxis(strafeAxis),
-            () -> -Controllers.driverController.getRawAxis(rotationAxis),
+            () -> Controllers.driverController.getRawAxis(rotationAxis),
             () -> Controllers.driverController.leftBumper().getAsBoolean()));
 
     m_gripper.setDefaultCommand(
