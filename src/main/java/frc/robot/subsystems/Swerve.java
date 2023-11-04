@@ -21,14 +21,13 @@ import frc.robot.SwerveModule;
 import java.util.Map;
 
 public class Swerve extends SubsystemBase {
-  public Boolean m_slow;
+  public Boolean m_slowMode = false;
 
   public SwerveDriveOdometry swerveOdometry;
   public SwerveModule[] mSwerveMods;
   public Pigeon2 gyro;
 
   public Swerve() {
-    m_slow = true;
     gyro = new Pigeon2(Constants.Swerve.pigeonID);
     gyro.configFactoryDefault();
     zeroGyro();
@@ -61,9 +60,7 @@ public class Swerve extends SubsystemBase {
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(
                     translation.getX(), translation.getY(), rotation, getYaw())
                 : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
-    SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, m_slow ? Constants.slowModif : Constants.Swerve.maxSpeed);
-
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, m_slowMode ? Constants.Swerve.slowSpeed : Constants.Swerve.maxSpeed);
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
@@ -85,13 +82,13 @@ public class Swerve extends SubsystemBase {
     states[0] = new SwerveModuleState(0.0, Rotation2d.fromDegrees(45.0));
     states[1] = new SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0));
     states[2] = new SwerveModuleState(0.0, Rotation2d.fromDegrees(135.0));
-    states[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(-135.0));
+    states[3] = new SwerveModuleState(0.0, Rotation2d.fromDegrees(-135.0));
     setModuleStates(states);
   }
 
-  public void toggleSlow() {
-    m_slow = !m_slow;
-    if (this.m_slow) {
+  public void toggleSlowMode() {
+    m_slowMode = !m_slowMode;
+    if (m_slowMode) {
       Controllers.driverController.setRumble(RumbleType.kBothRumble, Controllers.kRumbleValue);
     } else {
       Controllers.driverController.setRumble(RumbleType.kBothRumble, 0);
