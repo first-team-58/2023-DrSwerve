@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants.ArmMotorPorts;
-import frc.robot.Constants.ArmConstants.ArmSpeeds;
+import frc.robot.Constants.ArmConstants.GripperConstraints;
 
 public class Gripper extends SubsystemBase {
   private final WPI_TalonFX m_gripperMotor;
@@ -30,23 +30,23 @@ public class Gripper extends SubsystemBase {
   }
 
   public void spinAtSpeed() {
-    double speed = ArmSpeeds.kMaxGripperSpeed;
+    double speed = GripperConstraints.kMaxGripperSpeed;
     m_gripperMotor.set(ControlMode.PercentOutput, speed);
   }
 
   public void spinOut() {
-    double speed = -ArmSpeeds.kMaxGripperSpeed;
+    double speed = -GripperConstraints.kMaxGripperSpeed;
     m_gripperMotor.set(ControlMode.PercentOutput, speed);
   }
 
   public void spinIn() {
-    double speed = ArmSpeeds.kMaxGripperSpeed;
+    double speed = GripperConstraints.kMaxGripperSpeed;
     m_gripperMotor.set(ControlMode.PercentOutput, speed);
   }
 
   public void spin(double speed) {
-    if (Math.abs(speed) > ArmSpeeds.kMaxGripperSpeed) {
-      speed = ArmSpeeds.kMaxGripperSpeed * Math.signum(speed);
+    if (Math.abs(speed) > GripperConstraints.kMaxGripperSpeed) {
+      speed = GripperConstraints.kMaxGripperSpeed * Math.signum(speed);
     }
     m_gripperMotor.set(speed);
   }
