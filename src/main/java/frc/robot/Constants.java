@@ -14,7 +14,7 @@ public final class Constants {
 
   public static final class Controllers {
     public static final CommandXboxExtended driverController = new CommandXboxExtended(0);
-    public static final CommandXboxExtended kOperatorController = new CommandXboxExtended(1);
+    public static final CommandXboxExtended operatorController = new CommandXboxExtended(1);
     public static final double kRumbleValue = .3;
     public static final double stickDeadband = 0.1;
 
@@ -104,6 +104,8 @@ public final class Constants {
     public static final double maxAngularVelocity =
         10.0; // TODO: This must be tuned to specific robot
 
+    public static final double slowSpeed = 1; // Meters per second
+
     /* Neutral Modes */
     public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
     public static final NeutralMode driveNeutralMode = NeutralMode.Brake;
@@ -116,7 +118,7 @@ public final class Constants {
       public static final int canCoderID = 1;
       public static final boolean driveMotorInvert = false;
       public static final boolean angleMotorInvert = false;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(251.89);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(251.81);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(
               driveMotorID,
@@ -152,7 +154,7 @@ public final class Constants {
       public static final int canCoderID = 3;
       public static final boolean driveMotorInvert = false;
       public static final boolean angleMotorInvert = false;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(332.31);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(332.40);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(
               driveMotorID,
@@ -170,7 +172,7 @@ public final class Constants {
       public static final int canCoderID = 4;
       public static final boolean driveMotorInvert = false;
       public static final boolean angleMotorInvert = false;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(101.16);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(100.37);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(
               driveMotorID,

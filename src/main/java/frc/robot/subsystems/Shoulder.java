@@ -126,9 +126,9 @@ public class Shoulder extends SubsystemBase {
   public void ToggleSlowMode() {
     m_slowMode = !m_slowMode;
     if (this.m_slowMode)
-      Controllers.kOperatorController.setRumble(RumbleType.kBothRumble, Controllers.kRumbleValue);
+      Controllers.operatorController.setRumble(RumbleType.kBothRumble, Controllers.kRumbleValue);
     else {
-      Controllers.kOperatorController.setRumble(RumbleType.kBothRumble, 0);
+      Controllers.operatorController.setRumble(RumbleType.kBothRumble, 0);
     }
   }
 
