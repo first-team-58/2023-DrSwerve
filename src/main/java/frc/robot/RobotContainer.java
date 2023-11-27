@@ -24,7 +24,7 @@ public class RobotContainer {
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  private final int rotationAxis = XboxController.Axis.kRightX.value;
+  private final int rotationAxis = 2;
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
@@ -47,11 +47,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    Controllers.driverController.y().onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    Controllers.driverController.x().onTrue(new InstantCommand(() -> s_Swerve.setWheelsToX()));
+    Controllers.driverController.button(7).onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    Controllers.driverController.button(1).onTrue(new InstantCommand(() -> s_Swerve.toggleSlow()));
     Controllers.driverController
-        .rightBumper()
-        .onTrue(new InstantCommand(() -> s_Swerve.toggleSlow()));
+        .button(6)
+        .onTrue(new RunCommand(() -> s_Swerve.setWheelsToX(), s_Swerve));
 
     /* Operator Controls */
     /* Move Shoulder front to back with Y button */
@@ -85,8 +85,8 @@ public class RobotContainer {
             s_Swerve,
             () -> -Controllers.driverController.getRawAxis(translationAxis),
             () -> -Controllers.driverController.getRawAxis(strafeAxis),
-            () -> -Controllers.driverController.getRawAxis(rotationAxis),
-            () -> Controllers.driverController.leftBumper().getAsBoolean()));
+            () -> Controllers.driverController.getRawAxis(rotationAxis),
+            () -> Controllers.driverController.button(8).getAsBoolean()));
 
     m_gripper.setDefaultCommand(
         new TeleopGripper(

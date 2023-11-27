@@ -76,7 +76,7 @@ public class Shoulder extends SubsystemBase {
   public void moveShoulderFrontToBack() {
     // if (getBackLimitSwitch()) {
     //   stop();
-    // } else 
+    // } else
     if (getArmAngle() > ShoulderConstraints.kShoulderBackAngleSlowMode || m_slowMode)
       move(-ArmSpeeds.kMaxOutputShoulderSlowSpeed);
     else move(-ArmSpeeds.kMaxOutputShoulderFastSpeed);
@@ -85,7 +85,7 @@ public class Shoulder extends SubsystemBase {
   public void moveShoulderFrontToBackSlow() {
     // if (getBackLimitSwitch()) {
     //   stop();
-    // } else 
+    // } else
     if (getArmAngle() > ShoulderConstraints.kShoulderBackAngleSlowMode || m_slowMode)
       move(-ArmSpeeds.kMaxOutputShoulderSlowSpeed);
     else
