@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.WPI_TalonFXExtended;
 import frc.robot.Constants.ArmConstants.ArmMotorPorts;
-import frc.robot.Constants.ArmConstants.ArmSpeeds;
 import frc.robot.Constants.ArmConstants.LimitSwitches;
 import frc.robot.Constants.ArmConstants.ShoulderConstraints;
 import frc.robot.Constants.Controllers;
@@ -78,8 +77,8 @@ public class Shoulder extends SubsystemBase {
     //   stop();
     // } else
     if (getArmAngle() > ShoulderConstraints.kShoulderBackAngleSlowMode || m_slowMode)
-      move(-ArmSpeeds.kMaxOutputShoulderSlowSpeed);
-    else move(-ArmSpeeds.kMaxOutputShoulderFastSpeed);
+      move(-ShoulderConstraints.kMaxOutputShoulderSlowSpeed);
+    else move(-ShoulderConstraints.kMaxOutputShoulderFastSpeed);
   }
 
   public void moveShoulderFrontToBackSlow() {
@@ -87,9 +86,11 @@ public class Shoulder extends SubsystemBase {
     //   stop();
     // } else
     if (getArmAngle() > ShoulderConstraints.kShoulderBackAngleSlowMode || m_slowMode)
-      move(-ArmSpeeds.kMaxOutputShoulderSlowSpeed);
+      move(-ShoulderConstraints.kMaxOutputShoulderSlowSpeed);
     else
-      move(-ArmSpeeds.kMaxOutputShoulderFastSpeed * ShoulderConstraints.kShoulderAutoSpeedModifier);
+      move(
+          -ShoulderConstraints.kMaxOutputShoulderFastSpeed
+              * ShoulderConstraints.kShoulderAutoSpeedModifier);
   }
 
   public void moveShoulderBackToFront() {
@@ -97,8 +98,8 @@ public class Shoulder extends SubsystemBase {
       stop();
       resetAngleToZero();
     } else if (getArmAngle() < ShoulderConstraints.kShoulderFrontAngleSlowMode || m_slowMode)
-      move(ArmSpeeds.kMaxOutputShoulderSlowSpeed);
-    else move(ArmSpeeds.kMaxOutputShoulderFastSpeed);
+      move(ShoulderConstraints.kMaxOutputShoulderSlowSpeed);
+    else move(ShoulderConstraints.kMaxOutputShoulderFastSpeed);
   }
 
   public void moveShoulderBackToFrontSlow() {
@@ -106,9 +107,11 @@ public class Shoulder extends SubsystemBase {
       stop();
       resetAngleToZero();
     } else if (getArmAngle() < ShoulderConstraints.kShoulderFrontAngleSlowMode || m_slowMode)
-      move(ArmSpeeds.kMaxOutputShoulderSlowSpeed);
+      move(ShoulderConstraints.kMaxOutputShoulderSlowSpeed);
     else
-      move(ArmSpeeds.kMaxOutputShoulderFastSpeed * ShoulderConstraints.kShoulderAutoSpeedModifier);
+      move(
+          ShoulderConstraints.kMaxOutputShoulderFastSpeed
+              * ShoulderConstraints.kShoulderAutoSpeedModifier);
   }
 
   public void move(double speed) {
@@ -123,9 +126,9 @@ public class Shoulder extends SubsystemBase {
   public void ToggleSlowMode() {
     m_slowMode = !m_slowMode;
     if (this.m_slowMode)
-      Controllers.kOperatorController.setRumble(RumbleType.kBothRumble, Controllers.kRumbleValue);
+      Controllers.operatorController.setRumble(RumbleType.kBothRumble, Controllers.kRumbleValue);
     else {
-      Controllers.kOperatorController.setRumble(RumbleType.kBothRumble, 0);
+      Controllers.operatorController.setRumble(RumbleType.kBothRumble, 0);
     }
   }
 

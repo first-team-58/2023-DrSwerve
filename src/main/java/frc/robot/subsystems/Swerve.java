@@ -53,14 +53,16 @@ public class Swerve extends SubsystemBase {
 
   public void drive(
       Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+    ChassisSpeeds speeds =
+        fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                translation.getX(), translation.getY(), rotation, getYaw())
+            : new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+    ChassisSpeeds discreteSpeeds = discretize(speeds, .02);
     SwerveModuleState[] swerveModuleStates =
-        Constants.Swerve.swerveKinematics.toSwerveModuleStates(
-            fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                    translation.getX(), translation.getY(), rotation, getYaw())
-                : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
+        Constants.Swerve.swerveKinematics.toSwerveModuleStates(discreteSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, m_slow ? Constants.slowModif : Constants.Swerve.maxSpeed);
+        swerveModuleStates, m_slow ? Constants.Swerve.slowSpeed : Constants.Swerve.maxSpeed);
 
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
@@ -74,17 +76,6 @@ public class Swerve extends SubsystemBase {
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(desiredStates[mod.moduleNumber], false);
     }
-  }
-
-  public void setWheelsToX() {
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-    SwerveModuleState[] states =
-        Constants.Swerve.swerveKinematics.toSwerveModuleStates(chassisSpeeds);
-    states[0] = new SwerveModuleState(0.0, Rotation2d.fromDegrees(45.0));
-    states[1] = new SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0));
-    states[2] = new SwerveModuleState(0.0, Rotation2d.fromDegrees(135.0));
-    states[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(-135.0));
-    setModuleStates(states);
   }
 
   public void toggleSlow() {
@@ -159,5 +150,59 @@ public class Swerve extends SubsystemBase {
         .withPosition(4, 0)
         .withSize(1, 1)
         .withWidget(BuiltInWidgets.kGyro);
+  }
+
+  /**
+   * Discretizes a continuous-time chassis speed.
+   *
+   * <p>This function converts a continuous-time chassis speed into a discrete-time one such that
+   * when the discrete-time chassis speed is applied for one timestep, the robot moves as if the
+   * velocity components are independent (i.e., the robot moves v_x * dt along the x-axis, v_y * dt
+   * along the y-axis, and omega * dt around the z-axis).
+   *
+   * <p>This is useful for compensating for translational skew when translating and rotating a
+   * swerve drivetrain.
+   *
+   * @param continuousSpeeds The continuous speeds.
+   * @param dtSeconds The duration of the timestep the speeds should be applied for.
+   * @return Discretized ChassisSpeeds.
+   */
+  public ChassisSpeeds discretize(ChassisSpeeds continuousSpeeds, double dtSeconds) {
+    return discretize(
+        continuousSpeeds.vxMetersPerSecond,
+        continuousSpeeds.vyMetersPerSecond,
+        continuousSpeeds.omegaRadiansPerSecond,
+        dtSeconds);
+  }
+
+  /**
+   * Discretizes a continuous-time chassis speed.
+   *
+   * <p>This function converts a continuous-time chassis speed into a discrete-time one such that
+   * when the discrete-time chassis speed is applied for one timestep, the robot moves as if the
+   * velocity components are independent (i.e., the robot moves v_x * dt along the x-axis, v_y * dt
+   * along the y-axis, and omega * dt around the z-axis).
+   *
+   * <p>This is useful for compensating for translational skew when translating and rotating a
+   * swerve drivetrain.
+   *
+   * @param vxMetersPerSecond Forward velocity.
+   * @param vyMetersPerSecond Sideways velocity.
+   * @param omegaRadiansPerSecond Angular velocity.
+   * @param dtSeconds The duration of the timestep the speeds should be applied for.
+   * @return Discretized ChassisSpeeds.
+   */
+  private ChassisSpeeds discretize(
+      double vxMetersPerSecond,
+      double vyMetersPerSecond,
+      double omegaRadiansPerSecond,
+      double dtSeconds) {
+    var desiredDeltaPose =
+        new Pose2d(
+            vxMetersPerSecond * dtSeconds,
+            vyMetersPerSecond * dtSeconds,
+            new Rotation2d(omegaRadiansPerSecond * dtSeconds));
+    var twist = new Pose2d().log(desiredDeltaPose);
+    return new ChassisSpeeds(twist.dx / dtSeconds, twist.dy / dtSeconds, twist.dtheta / dtSeconds);
   }
 }
