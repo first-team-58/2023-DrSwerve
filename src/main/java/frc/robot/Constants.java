@@ -15,7 +15,7 @@ public final class Constants {
 
   public static final class Controllers {
     public static final CommandXboxController driverController = new CommandXboxController(0);
-    public static final CommandXboxExtended kOperatorController = new CommandXboxExtended(1);
+    public static final CommandXboxExtended operatorController = new CommandXboxExtended(1);
     public static final double kRumbleValue = .3;
     public static final double stickDeadband = 0.1;
 
@@ -98,8 +98,6 @@ public final class Constants {
 
     /* Swerve Profiling Values */
     /** Meters per Second */
-    public static final double slowSpeed = 1;
-
     public static final double maxSpeed = 4.5; // TODO: This must be tuned to specific robot
     /** Radians per Second */
     public static final double maxAngularVelocity =
