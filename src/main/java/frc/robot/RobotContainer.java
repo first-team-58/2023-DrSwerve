@@ -49,7 +49,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    Controllers.driverController.button(7).onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    Controllers.driverController.button(7).onTrue(new InstantCommand(() -> s_Swerve.toggleXStance()));
     Controllers.driverController.button(1).onTrue(new InstantCommand(() -> s_Swerve.toggleSlow()));
 
     /* Operator Controls */
