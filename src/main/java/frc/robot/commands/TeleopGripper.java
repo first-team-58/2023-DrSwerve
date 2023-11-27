@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ArmConstants.TeleopConstraints;
+import frc.robot.Constants.ArmConstants.GripperConstraints;
 import frc.robot.subsystems.Gripper;
 import java.util.function.DoubleSupplier;
 
@@ -43,7 +43,7 @@ public class TeleopGripper extends CommandBase {
     if (m_spinInSupplier.getAsDouble() > 0) speed = -m_spinInSupplier.getAsDouble();
     else if (m_spinOutSupplier.getAsDouble() > 0) speed = m_spinOutSupplier.getAsDouble();
 
-    double spinValue = calculateDeadzone(speed, TeleopConstraints.kGripperDeadzone);
+    double spinValue = calculateDeadzone(speed, GripperConstraints.kGripperDeadzone);
 
     m_gripper.spin(spinValue);
   }

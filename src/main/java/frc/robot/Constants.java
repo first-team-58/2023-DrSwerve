@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.CommandXboxExtended;
 import frc.lib.util.SwerveModuleConstants;
@@ -13,7 +14,7 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
 
   public static final class Controllers {
-    public static final CommandXboxExtended driverController = new CommandXboxExtended(0);
+    public static final CommandXboxController driverController = new CommandXboxController(0);
     public static final CommandXboxExtended operatorController = new CommandXboxExtended(1);
     public static final double kRumbleValue = .3;
     public static final double stickDeadband = 0.1;
@@ -100,7 +101,7 @@ public final class Constants {
     public static final double maxSpeed = 4.5; // TODO: This must be tuned to specific robot
     /** Radians per Second */
     public static final double maxAngularVelocity =
-        10.0; // TODO: This must be tuned to specific robot
+        3.0; // TODO: This must be tuned to specific robot
 
     public static final double slowSpeed = 1; // Meters per second
 
@@ -116,7 +117,7 @@ public final class Constants {
       public static final int canCoderID = 1;
       public static final boolean driveMotorInvert = false;
       public static final boolean angleMotorInvert = false;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(251.81);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(250.22);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(
               driveMotorID,
@@ -170,7 +171,7 @@ public final class Constants {
       public static final int canCoderID = 4;
       public static final boolean driveMotorInvert = false;
       public static final boolean angleMotorInvert = false;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(100.37);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(100.107);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(
               driveMotorID,
@@ -217,44 +218,43 @@ public final class Constants {
     }
 
     public static final class ReacherConstraints {
-      public static final int kReacherEncoderMin = 1000;
-      public static final int kReacherEncoderMax = 2450;
+      // Teleop reacher speeds
+      public static final double kMaxReacherSpeed = 1;
       public static final double kReacherSlowSpeed = .5;
+
       public static final double kReacherLimitSwitchDebounceTime = 1.2;
       public static final double kReacherAngleSwitchDebounceTime = .5;
+
+      public static final int kReacherEncoderMin = 1000;
+      public static final int kReacherEncoderMax = 2450;
     }
 
     public static final class ShoulderConstraints {
+      // Teleop shoulder speeds
+      public static final double kMaxOutputShoulderFastSpeed = .40;
+      public static final double kMaxOutputShoulderSlowSpeed = .15;
+
+      // Auto shoulder speeds
+      public static final double kShoulderAutoSpeedModifier = 0.65;
+
+      // When to activate shoulder slow modes
+      public static final double kShoulderFrontAngleSlowMode = 40;
+      public static final double kShoulderBackAngleSlowMode = 180;
+
+      public static final double kShoulderLimitSwitchDebounceTime = 0.1;
+
       public static final double kShoulderGearRatio = 1285;
       public static final double kShoulderFrontStartAngle = -50.0;
       public static final double kTurnToleranceDeg = 2.0;
       public static final double kShoulerAngleTolerance = 5;
-      public static final double kShoulderFrontAngleSlowMode = 40;
-      public static final double kShoulderBackAngleSlowMode = 180;
-      public static final double kShoulderAutoSpeedModifier = 0.65;
-      public static final double kShoulderLimitSwitchDebounceTime = 0.1;
     }
 
-    public static final class ArmSpeeds {
-      public static final double kMaxOutputShoulderFastSpeed = .40;
-      public static final double kMaxOutputShoulderSlowSpeed = .15;
-      public static final double kMaxReacherSpeed = 1;
+    public static final class GripperConstraints {
+      // Teleop gripper speeds
       public static final double kMaxGripperSpeed = 1;
-    }
 
-    // TODO: remove unused constants
-    // added teleop constraints
-    public static final class TeleopConstraints {
-      public static double kMaxOutputFastSpeed = 1;
-      public static final double kMaxOutputSlowSpeed = .5;
-      public static final double kMaxOutputSlowRotateSpeed = .3;
-      public static final double kMaxOutputCurveSpeed = .5;
-      public static final double kMoveDeadzone = .2;
-      public static final double kRotateDeadzone = .2;
+      // Trigger deadzone
       public static final double kGripperDeadzone = .02;
-      public static final int kDelayFastMode = 40; // miliseconds
-      public static final double kRotate180Seconds = .67;
-      public static final double kRotateSpeed = 0.7;
     }
   }
 }

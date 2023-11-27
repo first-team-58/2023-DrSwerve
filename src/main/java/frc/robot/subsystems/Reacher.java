@@ -10,7 +10,6 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants.ArmMotorPorts;
-import frc.robot.Constants.ArmConstants.ArmSpeeds;
 import frc.robot.Constants.ArmConstants.LimitSwitches;
 import frc.robot.Constants.ArmConstants.ReacherConstraints;
 
@@ -46,15 +45,15 @@ public class Reacher extends SubsystemBase {
   }
 
   public void reacherOut() {
-    reach(ArmSpeeds.kMaxReacherSpeed);
+    reach(ReacherConstraints.kMaxReacherSpeed);
   }
 
   public void reacherIn() {
-    reach(-ArmSpeeds.kMaxReacherSpeed);
+    reach(-ReacherConstraints.kMaxReacherSpeed);
   }
 
   public void reacherInSlow() {
-    reach(-ArmSpeeds.kMaxReacherSpeed * .5);
+    reach(-ReacherConstraints.kMaxReacherSpeed * .5);
   }
 
   private void reach(double speed) {
