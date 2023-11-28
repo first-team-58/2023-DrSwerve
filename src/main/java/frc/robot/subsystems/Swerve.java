@@ -74,10 +74,7 @@ public class Swerve extends SubsystemBase {
 
   /* Used by SwerveControllerCommand in Auto */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    System.out.println("Mod 0 " + desiredStates[0].angle);
-    System.out.println("Mod 2 " + desiredStates[2].angle);
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
-
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(desiredStates[mod.moduleNumber], false);
     }
@@ -92,10 +89,6 @@ public class Swerve extends SubsystemBase {
     if (m_xStance) {
       setXStance();
     }
-  }
-
-  public Boolean getXStance() {
-    return m_xStance;
   }
 
   public Pose2d getPose() {
@@ -132,25 +125,9 @@ public class Swerve extends SubsystemBase {
   }
 
   public void setXStance() {
-    SwerveModuleState[] state = 
-        new SwerveModuleState[] {
-          // front left
-          new SwerveModuleState(0.0, Rotation2d.fromDegrees(45.0)),
-          // front right
-          new SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0)),
-          // back left
-          new SwerveModuleState(0.0, Rotation2d.fromDegrees(135.0)),
-          // back right
-          new SwerveModuleState(0.0, Rotation2d.fromDegrees(-135.0)),
-        };
-
-        for (SwerveModule mod : mSwerveMods) {
-          mod.setAngleStill(state[mod.moduleNumber]);
-        }
-        
-        SwerveModuleState[] modStates = getModuleStates();
-
-        System.out.println(modStates[0].angle);
+    for (SwerveModule mod : mSwerveMods) {
+      mod.setModuleToX();
+    }
   }
 
   public Rotation2d getYaw() {
@@ -194,7 +171,7 @@ public class Swerve extends SubsystemBase {
         .withSize(1, 1)
         .withWidget(BuiltInWidgets.kGyro);
 
-    tab.addBoolean("is x", () -> getXStance())
+    tab.addBoolean("XStance", () -> this.m_xStance)
         .withPosition(6, 0)
         .withSize(1, 1)
         .withWidget(BuiltInWidgets.kBooleanBox);

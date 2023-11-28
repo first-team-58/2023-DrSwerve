@@ -27,6 +27,8 @@ public class SwerveModule {
       new SimpleMotorFeedforward(
           Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
+  Double[] xPattern = {45.0, -45.0, 135.0, -135.0};
+
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
     this.mModuleConstants = moduleConstants;
@@ -85,13 +87,9 @@ public class SwerveModule {
     lastAngle = angle;
   }
 
-  public void setAngleStill(SwerveModuleState desiredState) {
-    Rotation2d angle = desiredState.angle; // Prevent rotating module if speed is less then 1%. Prevents Jittering.
-
-    mAngleMotor.set(
-        ControlMode.Position,
-        Conversions.degreesToFalcon(angle.getDegrees(), Constants.Swerve.angleGearRatio));
-    lastAngle = angle;
+  public void setModuleToX() {
+    lastAngle = Rotation2d.fromDegrees(xPattern[moduleNumber]);
+    setAngle(new SwerveModuleState(0.0, lastAngle));
   }
 
   private Rotation2d getAngle() {
