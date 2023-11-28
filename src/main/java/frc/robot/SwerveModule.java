@@ -89,7 +89,7 @@ public class SwerveModule {
 
   public void setModuleToX() {
     lastAngle = Rotation2d.fromDegrees(xPattern[moduleNumber]);
-    setDesiredState(new SwerveModuleState(0.0, lastAngle), false);
+    setDesiredState(new SwerveModuleState(0.0, lastAngle), true);
   }
 
   private Rotation2d getAngle() {
