@@ -27,7 +27,7 @@ public class SwerveModule {
       new SimpleMotorFeedforward(
           Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
-  Double[] xPattern = {45.0, -45.0, 135.0, -135.0};
+  private final Double[] xPattern = {45.0, -45.0, 135.0, -135.0};
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
