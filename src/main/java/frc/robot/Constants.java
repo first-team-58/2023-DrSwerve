@@ -6,15 +6,16 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.lib.util.COTSFalconSwerveConstants;
+import frc.lib.util.CommandLogitechController;
 import frc.lib.util.CommandXboxExtended;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
   public static final class Controllers {
-    public static final CommandXboxController driverController = new CommandXboxController(0);
+    public static final CommandLogitechController driverController =
+        new CommandLogitechController(0);
     public static final CommandXboxExtended operatorController = new CommandXboxExtended(1);
     public static final double kRumbleValue = .3;
     public static final double stickDeadband = 0.1;

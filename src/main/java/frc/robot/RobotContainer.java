@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.lib.util.LogitechController;
 import frc.robot.Constants.Controllers;
 import frc.robot.commands.TeleopGripper;
 import frc.robot.commands.TeleopSwerve;
@@ -21,9 +22,9 @@ import frc.robot.subsystems.Swerve;
  */
 public class RobotContainer {
   /* Drive Controls */
-  private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  private final int rotationAxis = 2;
+  private final int translationAxis = LogitechController.Axis.kJoystickY.value;
+  private final int strafeAxis = LogitechController.Axis.kJoystickX.value;
+  private final int rotationAxis = LogitechController.Axis.kJoystickZ.value;
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
@@ -50,9 +51,12 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     Controllers.driverController
-        .button(7)
+        .joystickThumb()
         .onTrue(new InstantCommand(() -> s_Swerve.toggleXStance()));
-    Controllers.driverController.button(1).onTrue(new InstantCommand(() -> s_Swerve.toggleSlow()));
+
+    Controllers.driverController
+        .joystickTrigger()
+        .onTrue(new InstantCommand(() -> s_Swerve.toggleSlow()));
 
     /* Operator Controls */
     /* Move Shoulder front to back with Y button */
