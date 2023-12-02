@@ -19,7 +19,7 @@ import frc.robot.SwerveModule;
 import java.util.Map;
 
 public class Swerve extends SubsystemBase {
-  public Boolean m_slow;
+  private Boolean m_slow = true;
   private Boolean m_xStance = false;
 
   public SwerveDriveOdometry swerveOdometry;
@@ -27,7 +27,6 @@ public class Swerve extends SubsystemBase {
   public Pigeon2 gyro;
 
   public Swerve() {
-    m_slow = true;
     gyro = new Pigeon2(Constants.Swerve.pigeonID);
     gyro.configFactoryDefault();
     zeroGyro();
@@ -117,11 +116,6 @@ public class Swerve extends SubsystemBase {
 
   public void zeroGyro() {
     gyro.setYaw(0);
-  }
-
-  public void resetRelativeAndGyro() {
-    zeroGyro();
-    resetModulesToAbsolute();
   }
 
   public void setXStance() {
