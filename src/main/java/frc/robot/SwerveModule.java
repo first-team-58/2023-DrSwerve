@@ -27,6 +27,8 @@ public class SwerveModule {
       new SimpleMotorFeedforward(
           Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
+  private final Double[] xPattern = {45.0, -45.0, 135.0, -135.0};
+
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
     this.mModuleConstants = moduleConstants;
@@ -83,6 +85,11 @@ public class SwerveModule {
         ControlMode.Position,
         Conversions.degreesToFalcon(angle.getDegrees(), Constants.Swerve.angleGearRatio));
     lastAngle = angle;
+  }
+
+  public void setModuleToX() {
+    lastAngle = Rotation2d.fromDegrees(xPattern[moduleNumber]);
+    setDesiredState(new SwerveModuleState(0.0, lastAngle), true);
   }
 
   private Rotation2d getAngle() {

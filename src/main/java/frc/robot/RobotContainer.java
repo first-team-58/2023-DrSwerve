@@ -49,8 +49,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    Controllers.driverController.button(7).onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    Controllers.driverController
+        .button(7)
+        .onTrue(new InstantCommand(() -> s_Swerve.toggleXStance()));
     Controllers.driverController.button(1).onTrue(new InstantCommand(() -> s_Swerve.toggleSlow()));
+
+    Controllers.driverController.button(3).onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
     /* Operator Controls */
     /* Move Shoulder front to back with Y button */
