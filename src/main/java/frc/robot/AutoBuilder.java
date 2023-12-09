@@ -1,6 +1,9 @@
 package frc.robot;
 
+import com.choreo.lib.*;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -39,7 +42,30 @@ public class AutoBuilder {
 
   private void buildAutonomousChooser() {
     m_chooser.setDefaultOption("DO NOTHING", new PrintCommand("NOTHING"));
+    m_chooser.addOption("Choreo Drive Straight", driveStraightChoreo());
     m_chooser.addOption("Score Cube", cubeShootAndScoreHigh().andThen(bringArmHome()));
+  }
+
+  private Command driveStraightChoreo() {
+    // do not include .traj extension when referencing the file name
+    // this file should be in: "{deployDirectory}/choreo/"
+    ChoreoTrajectory trajectory = Choreo.getTrajectory("straightTrajectory");
+
+    // Create a swerve command for the robot to follow the trajectory
+    return Choreo.choreoSwerveCommand(
+        trajectory,
+        m_swerve::getPose,
+        new PIDController(0, 0, 0),
+        new PIDController(0, 0, 0),
+        new PIDController(0, 0, 0),
+        (ChassisSpeeds speeds) ->
+            m_swerve.drive(
+                new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
+                speeds.omegaRadiansPerSecond,
+                false,
+                false),
+        true,
+        m_swerve);
   }
 
   /* private Command weekZeroChargeClimb() {
