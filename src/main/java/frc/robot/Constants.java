@@ -39,9 +39,9 @@ public final class Constants {
 
     /* Drivetrain Constants */
     public static final double trackWidth =
-        Units.inchesToMeters(22.9375); // DONE: Need to confirm this initial measurement
+        Units.inchesToMeters(23.0); // DONE: Need to confirm this initial measurement
     public static final double wheelBase =
-        Units.inchesToMeters(23.125); // DONE: Need to confirm this initial measurement
+        Units.inchesToMeters(23.0); // DONE: Need to confirm this initial measurement
     public static final double wheelCircumference = chosenModule.wheelCircumference;
 
     /* Swerve Kinematics

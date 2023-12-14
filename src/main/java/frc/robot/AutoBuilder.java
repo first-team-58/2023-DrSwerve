@@ -41,7 +41,7 @@ public class AutoBuilder {
   }
 
   private void buildAutonomousChooser() {
-    m_chooser.setDefaultOption("DO NOTHING", new PrintCommand("NOTHING"));
+    m_chooser.setDefaultOption("Choreo Drive Straight", driveStraightChoreo());
     m_chooser.addOption("Choreo Drive Straight", driveStraightChoreo());
     m_chooser.addOption("Score Cube", cubeShootAndScoreHigh().andThen(bringArmHome()));
   }
@@ -55,16 +55,16 @@ public class AutoBuilder {
     return Choreo.choreoSwerveCommand(
         trajectory,
         m_swerve::getPose,
-        new PIDController(0, 0, 0),
-        new PIDController(0, 0, 0),
-        new PIDController(0, 0, 0),
+        new PIDController(5, 0, 0),
+        new PIDController(5, 0, 0),
+        new PIDController(-10, 0, 0),
         (ChassisSpeeds speeds) ->
             m_swerve.drive(
                 new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
                 speeds.omegaRadiansPerSecond,
                 false,
                 false),
-        true,
+        false,  //TODO: research why true throws an error
         m_swerve);
   }
 
