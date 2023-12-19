@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ReacherOutToPosition;
@@ -42,29 +41,36 @@ public class AutoBuilder {
 
   private void buildAutonomousChooser() {
     m_chooser.setDefaultOption("Choreo Drive Straight", driveStraightChoreo());
-    m_chooser.addOption("Choreo Drive Straight", driveStraightChoreo());
-    m_chooser.addOption("Score Cube", cubeShootAndScoreHigh().andThen(bringArmHome()));
+    m_chooser.addOption("Choreo Drive Straight and Rotate 180", driveStraightRotate180Choreo());
   }
 
   private Command driveStraightChoreo() {
+    return driveChoreo("straightTrajectory");
+  }
+
+  private Command driveStraightRotate180Choreo() {
+    return driveChoreo("straight-rotate-180");
+  }
+
+  private Command driveChoreo(String trajectoryFile) {
     // do not include .traj extension when referencing the file name
     // this file should be in: "{deployDirectory}/choreo/"
-    ChoreoTrajectory trajectory = Choreo.getTrajectory("straightTrajectory");
+    ChoreoTrajectory trajectory = Choreo.getTrajectory(trajectoryFile);
 
     // Create a swerve command for the robot to follow the trajectory
     return Choreo.choreoSwerveCommand(
         trajectory,
         m_swerve::getPose,
-        new PIDController(5, 0, 0),
-        new PIDController(5, 0, 0),
-        new PIDController(-10, 0, 0),
+        new PIDController(.011, 0, 0),
+        new PIDController(.011, 0, 0),
+        new PIDController(.011, 0, 0),
         (ChassisSpeeds speeds) ->
             m_swerve.drive(
                 new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
                 speeds.omegaRadiansPerSecond,
                 false,
                 false),
-        false,  //TODO: research why true throws an error
+        false, // TODO: research why true throws an error
         m_swerve);
   }
 
