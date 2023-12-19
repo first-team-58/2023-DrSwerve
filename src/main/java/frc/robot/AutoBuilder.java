@@ -40,12 +40,12 @@ public class AutoBuilder {
   }
 
   private void buildAutonomousChooser() {
-    m_chooser.setDefaultOption("Choreo Drive Straight", driveStraightChoreo());
+    m_chooser.setDefaultOption("Choreo Drive 2 Meters", driveTwoMetersChoreo());
     m_chooser.addOption("Choreo Drive Straight and Rotate 180", driveStraightRotate180Choreo());
   }
 
-  private Command driveStraightChoreo() {
-    return driveChoreo("straightTrajectory");
+  private Command driveTwoMetersChoreo() {
+    return driveChoreo("drive-2-meters");
   }
 
   private Command driveStraightRotate180Choreo() {
